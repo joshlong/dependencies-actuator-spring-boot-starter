@@ -1,10 +1,16 @@
 package com.joshlong.dependencies;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aot.hint.RuntimeHints;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -16,8 +22,10 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * @author Josh Long
  */
 @Slf4j
-@ManagementContextConfiguration(proxyBeanMethods = false)
-class DependencyReaderManagementContextAutoConfiguration {
+@Configuration
+class DependencyEndpointAutoConfiguration {
+
+	private static final Resource MAVEN_CLASSPATH_RESOURCE = new ClassPathResource("/classpath");
 
 	@Bean
 	ApplicationRunner dependencyManagementContextConfigurationListener() {
@@ -28,13 +36,23 @@ class DependencyReaderManagementContextAutoConfiguration {
 	}
 
 	@Bean
-	DependencyEndpoint dependencyEndpoint(DependencyReader dependencyReader) {
+	DependencyEndpoint dependencyEndpoint(@Qualifier("compositeDependencyReader") DependencyReader dependencyReader) {
 		return new DependencyEndpoint(dependencyReader);
 	}
 
+	static class DependencyRuntimeHints implements RuntimeHintsRegistrar {
+
+		@Override
+		public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+			hints.resources().registerResource(MAVEN_CLASSPATH_RESOURCE);
+		}
+
+	}
+
 	@Bean
+	@ImportRuntimeHints(DependencyRuntimeHints.class)
 	MavenDependencyPluginDependencyReader mavenDependencyPluginDependencyReader() throws Exception {
-		return new MavenDependencyPluginDependencyReader();
+		return new MavenDependencyPluginDependencyReader(MAVEN_CLASSPATH_RESOURCE);
 	}
 
 	@Bean
@@ -45,9 +63,13 @@ class DependencyReaderManagementContextAutoConfiguration {
 	@Bean
 	@Primary
 	DependencyReader compositeDependencyReader(Map<String, DependencyReader> readers) {
+		log.info("there are " + readers.size() + " " + DependencyReader.class.getName());
 		var set = new ConcurrentSkipListSet<Dependency>(Comparator
 				.comparing(dependency -> dependency.groupId() + dependency.artifactId() + dependency.version()));
-		readers.values().forEach(dr -> set.addAll(dr.dependencies()));
+		readers.values().forEach(dr -> {
+			log.info("contributing " + dr.getClass().getName() + '.');
+			set.addAll(dr.dependencies());
+		});
 		return () -> set;
 	}
 

@@ -1,10 +1,7 @@
 package com.joshlong.dependencies;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.aot.BeanFactoryInitializationAotContribution;
-import org.springframework.beans.factory.aot.BeanFactoryInitializationAotProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -20,20 +17,16 @@ import java.util.stream.Collectors;
  * @author Josh Long
  */
 @Slf4j
-class MavenDependencyPluginDependencyReader implements DependencyReader, BeanFactoryInitializationAotProcessor {
+class MavenDependencyPluginDependencyReader implements DependencyReader {
 
-	private final ClassPathResource classpath = new ClassPathResource("/META-INF/classpath");
+	private final Resource classpath;
 
 	private final Set<Dependency> dependencies = new ConcurrentSkipListSet<>(
 			Comparator.comparing(o -> (o.artifactId() + o.groupId() + o.version())));
 
-	@Override
-	public BeanFactoryInitializationAotContribution processAheadOfTime(ConfigurableListableBeanFactory beanFactory) {
-		return (context, beanFactoryInitializationCode) -> context.getRuntimeHints().resources()
-				.registerResource(this.classpath);
-	}
-
-	MavenDependencyPluginDependencyReader() throws Exception {
+	MavenDependencyPluginDependencyReader(Resource resource) throws Exception {
+		this.classpath = resource;
+		log.info("the classpath exists " + this.classpath.exists());
 		if (!classpath.exists()) {
 			return;
 		}
@@ -45,8 +38,7 @@ class MavenDependencyPluginDependencyReader implements DependencyReader, BeanFac
 
 	private Set<Dependency> dependencies(String manifestString) {
 		// there are two parts to the Maven manifest: the classpath and the dependencies
-		// tree
-		// the classpath is a list of jar files that are on the classpath.
+		// tree the classpath is a list of jar files that are on the classpath.
 		// the dependency tree is all the dependencies that are used by the application.
 		var lines = manifestString.lines().toList();
 		var cp = lines.get(0).split("::");
