@@ -8,11 +8,12 @@
         <version>3.0.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>bootiful</groupId>
-    <artifactId>actuator-supplychain</artifactId>
+    <groupId>com.joshlong</groupId>
+    <artifactId>dependencies-actuator-spring-boot-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>actuator-supplychain</name>
-    <description>Demo project for Spring Boot</description>
+
+
+
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -46,40 +47,18 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.3.0</version>
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+                <version>0.0.35</version>
                 <executions>
                     <execution>
+                        <phase>validate</phase>
+                        <inherited>true</inherited>
                         <goals>
-                            <goal>build-classpath</goal>
-                            <goal>tree</goal>
+                            <goal>validate</goal>
                         </goals>
-                        <phase>compile</phase>
                     </execution>
                 </executions>
-                <configuration>
-                    <attach/>
-                    <includeScope>compile</includeScope>
-                    <appendOutput>true</appendOutput>
-                    <pathSeparator>::</pathSeparator>
-                    <prependGroupId>true</prependGroupId>
-                    <outputFile>target/classes/META-INF/classpath</outputFile>
-                </configuration>
-
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-
             </plugin>
         </plugins>
     </build>

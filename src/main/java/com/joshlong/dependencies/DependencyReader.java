@@ -2,7 +2,8 @@ package com.joshlong.dependencies;
 
 import java.util.Set;
 
-interface DependencyReader {
+public interface DependencyReader {
 
-    Set<Dependency> dependencies();
+	Set<Dependency> dependencies();
+
 }

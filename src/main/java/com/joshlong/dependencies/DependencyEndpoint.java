@@ -6,16 +6,17 @@ import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import java.util.Set;
 
 @Endpoint(id = "dependencies")
-class DependencyEndpoint {
+public class DependencyEndpoint {
 
-    private final DependencyReader dependencyReader;
+	private final DependencyReader dependencyReader;
 
-    DependencyEndpoint(DependencyReader dependencyReader) {
-        this.dependencyReader = dependencyReader;
-    }
+	public DependencyEndpoint(DependencyReader dependencyReader) {
+		this.dependencyReader = dependencyReader;
+	}
 
-    @ReadOperation
-    Set<Dependency> dependencies() {
-        return this.dependencyReader.dependencies();
-    }
+	@ReadOperation
+	Set<Dependency> dependencies() {
+		return this.dependencyReader.dependencies();
+	}
+
 }
