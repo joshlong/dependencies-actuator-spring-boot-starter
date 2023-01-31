@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./save.sh && git commit -am polish && git push
+./install.sh && git commit -am polish && git push
