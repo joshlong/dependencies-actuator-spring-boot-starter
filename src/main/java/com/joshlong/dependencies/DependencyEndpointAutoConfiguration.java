@@ -45,7 +45,11 @@ class DependencyEndpointAutoConfiguration {
 		return new DependencyEndpoint(dependencyReader);
 	}
 
-	static class DependencyRuntimeHints implements RuntimeHintsRegistrar {
+	/**
+	 * Registers a hint for the Apache Maven-generated file so that it can be discovered
+	 * in the context of a GraalVM native image.
+	 */
+	private static class DependencyRuntimeHints implements RuntimeHintsRegistrar {
 
 		@Override
 		public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
