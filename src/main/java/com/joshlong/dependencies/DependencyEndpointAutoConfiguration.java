@@ -1,9 +1,5 @@
 package com.joshlong.dependencies;
 
-import com.joshlong.dependencies.ClasspathSystemPropertyDependencyReader;
-import com.joshlong.dependencies.Dependency;
-import com.joshlong.dependencies.DependencyReader;
-import com.joshlong.dependencies.MavenDependencyPluginDependencyReader;
 import com.joshlong.dependencies.actuator.DependencyEndpoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aot.hint.RuntimeHints;
@@ -19,6 +15,7 @@ import org.springframework.core.io.Resource;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
@@ -28,16 +25,16 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 @Slf4j
 @Configuration
+@ImportRuntimeHints(DependencyEndpointAutoConfiguration.DependencyRuntimeHints.class)
 class DependencyEndpointAutoConfiguration {
 
-	private static final Resource MAVEN_CLASSPATH_RESOURCE = new ClassPathResource("/classpath");
+	private static final Resource MAVEN_CLASSPATH_RESOURCE = new ClassPathResource("/maven-classpath");
+
+	private static final Resource GRADLE_CLASSPATH_RESOURCE = new ClassPathResource("/gradle-classpath");
 
 	@Bean
 	ApplicationRunner dependencyManagementContextConfigurationListener() {
-		return args -> {
-			if (log.isDebugEnabled())
-				log.debug("starting the " + DependencyEndpoint.class.getName());
-		};
+		return args -> log.debug("starting the " + DependencyEndpoint.class.getName());
 	}
 
 	@Bean
@@ -49,17 +46,22 @@ class DependencyEndpointAutoConfiguration {
 	 * Registers a hint for the Apache Maven-generated file so that it can be discovered
 	 * in the context of a GraalVM native image.
 	 */
-	private static class DependencyRuntimeHints implements RuntimeHintsRegistrar {
+	static class DependencyRuntimeHints implements RuntimeHintsRegistrar {
 
 		@Override
 		public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-			hints.resources().registerResource(MAVEN_CLASSPATH_RESOURCE);
+			Set.of(MAVEN_CLASSPATH_RESOURCE, GRADLE_CLASSPATH_RESOURCE)
+					.forEach(resource -> hints.resources().registerResource(resource));
 		}
 
 	}
 
 	@Bean
-	@ImportRuntimeHints(DependencyRuntimeHints.class)
+	GradleDependencyTaskDependencyReader gradleDependencyTaskDependencyReader() throws Exception {
+		return new GradleDependencyTaskDependencyReader(GRADLE_CLASSPATH_RESOURCE);
+	}
+
+	@Bean
 	MavenDependencyPluginDependencyReader mavenDependencyPluginDependencyReader() throws Exception {
 		return new MavenDependencyPluginDependencyReader(MAVEN_CLASSPATH_RESOURCE);
 	}

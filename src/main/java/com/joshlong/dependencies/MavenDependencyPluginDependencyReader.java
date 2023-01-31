@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 /**
@@ -17,26 +15,15 @@ import java.util.stream.Collectors;
  * @author Josh Long
  */
 @Slf4j
-class MavenDependencyPluginDependencyReader implements DependencyReader {
+class MavenDependencyPluginDependencyReader extends AbstractBuildPluginDependencyReportDependencyReader
+		implements DependencyReader {
 
-	private final Resource classpath;
-
-	private final Set<Dependency> dependencies = new ConcurrentSkipListSet<>(
-			Comparator.comparing(o -> (o.artifactId() + o.groupId() + o.version())));
-
-	MavenDependencyPluginDependencyReader(Resource resource) throws Exception {
-		this.classpath = resource;
-		log.info("the classpath exists " + this.classpath.exists());
-		if (!classpath.exists()) {
-			return;
-		}
-		try (var in = classpath.getInputStream()) {
-			var bytes = in.readAllBytes();
-			this.dependencies.addAll(dependencies(new String(bytes)));
-		}
+	MavenDependencyPluginDependencyReader(Resource classpath) throws Exception {
+		super(classpath);
 	}
 
-	private Set<Dependency> dependencies(String manifestString) {
+	@Override
+	protected Set<Dependency> parseDependencies(String manifestString) {
 		// there are two parts to the Maven manifest: the classpath and the dependencies
 		// tree the classpath is a list of jar files that are on the classpath.
 		// the dependency tree is all the dependencies that are used by the application.
@@ -76,12 +63,24 @@ class MavenDependencyPluginDependencyReader implements DependencyReader {
 							return false;
 						}))
 				.collect(Collectors.toSet());
-
 	}
+	/*
+	 * private final Resource classpath;
+	 *
+	 * private final Set<Dependency> dependencies = new ConcurrentSkipListSet<>(
+	 * Comparator.comparing(o -> (o.artifactId() + o.groupId() + o.version())));
+	 *
+	 * MavenDependencyPluginDependencyReader(Resource resource) throws Exception {
+	 * this.classpath = resource; log.info("the classpath exists " +
+	 * this.classpath.exists()); if (!classpath.exists()) { return; } try (var in =
+	 * classpath.getInputStream()) { var bytes = in.readAllBytes();
+	 * this.dependencies.addAll(dependencies(new String(bytes))); } }
+	 */
 
-	@Override
-	public Set<Dependency> dependencies() {
-		return this.dependencies;
-	}
+	//
+	// @Override
+	// public Set<Dependency> dependencies() {
+	// return this.dependencies;
+	// }
 
 }

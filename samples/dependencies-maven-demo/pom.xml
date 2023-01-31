@@ -59,7 +59,7 @@
                     <appendOutput>true</appendOutput>
                     <pathSeparator>::</pathSeparator>
                     <prependGroupId>true</prependGroupId>
-                    <outputFile>target/classes/classpath</outputFile>
+                    <outputFile>target/classes/maven-classpath</outputFile>
                 </configuration>
             </plugin>
         </plugins>
