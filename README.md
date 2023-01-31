@@ -11,8 +11,7 @@ The module will detect and use the `java.class.path` System property if it exist
 
 You can configure Apache Maven to enumerate which dependencies it thinks you have on the classpath with the out-of-the-box Apache Maven Dependency plugin.
 
-
-```xml 
+```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
@@ -23,7 +22,7 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
                 <goal>build-classpath</goal>
                 <goal>tree</goal>
             </goals>
-            <phase>compile</phase>
+            <phase>generate-resources</phase>
         </execution>
     </executions>
     <configuration>
@@ -32,11 +31,15 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
         <appendOutput>true</appendOutput>
         <pathSeparator>::</pathSeparator>
         <prependGroupId>true</prependGroupId>
-        <outputFile>target/classes/META-INF/classpath</outputFile>
+        <outputFile>target/classes/classpath</outputFile>
     </configuration>
 </plugin>
 ```
 
 ## Gradle 
 
-I need an incantation 
+You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle application, as well: 
+
+```groovy 
+
+```
