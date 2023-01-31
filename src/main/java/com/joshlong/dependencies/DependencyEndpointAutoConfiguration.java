@@ -74,7 +74,7 @@ class DependencyEndpointAutoConfiguration {
 	DependencyReader compositeDependencyReader(Map<String, DependencyReader> readers) {
 		log.info("there are " + readers.size() + " " + DependencyReader.class.getName());
 		var set = new ConcurrentSkipListSet<Dependency>(Comparator
-				.comparing(dependency -> dependency.groupId() + dependency.artifactId() + dependency.version()));
+				.comparing(dependency -> dependency.groupId() + dependency.version() + dependency.artifactId()));
 		readers.values().forEach(dr -> {
 			log.info("contributing " + dr.getClass().getName() + '.');
 			set.addAll(dr.dependencies());

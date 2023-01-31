@@ -7,6 +7,12 @@ import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 
 import java.util.Set;
 
+/**
+ * A Spring Boot Actuator endpoint exposing information about the dependencies on the
+ * classpath.
+ *
+ * @author Josh Long
+ */
 @Endpoint(id = "dependencies")
 public class DependencyEndpoint {
 
