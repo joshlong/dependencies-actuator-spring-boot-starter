@@ -38,8 +38,20 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
 
 ## Gradle 
 
-You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle application, as well: 
+You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle Kotlin application, as well. I am not super familiar with Gradle, and Groovy in particular, but it'll look something like this, too. 
 
-```groovy 
+```kotlin 
+
+val actuatorDependencies = tasks.register("actuatorDependencies", DependencyReportTask::class.java) {
+    setConfiguration("runtimeClasspath")
+    outputFile = File(project.buildDir.absoluteFile, "resources/main/gradle-classpath")
+}
+
+tasks
+    .matching { it.name != actuatorDependencies.name }
+    .forEach { task: Task ->
+        task.dependsOn(actuatorDependencies.name)
+    }
 
 ```
+
