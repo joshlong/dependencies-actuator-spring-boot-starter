@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Supports ingesting the output of a Gradle task such as documented in the
- * {@code README.md}
+ * This looks for a file produced by configuring Gradle using the plugin configuration
+ * documented in <pre>README.md</pre>.
  *
  * @author Josh Long
  */

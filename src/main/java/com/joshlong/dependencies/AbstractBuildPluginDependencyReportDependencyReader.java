@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Base implementation for the Apache Maven and Gradle {@link DependencyReader
- * dependencyReaders}.
+ * dependencyReader} implementations.
  *
  * @author Josh Long
  */

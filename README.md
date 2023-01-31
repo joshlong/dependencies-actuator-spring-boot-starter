@@ -38,7 +38,7 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
 
 ## Gradle 
 
-You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle Kotlin application, as well. I am not super familiar with Gradle, and Groovy in particular, but it'll look something like this, too. 
+You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle **Kotlin** application, as well. I am not super familiar with Gradle, and Groovy in particular, but it'll look something like this, too. 
 
 ```kotlin 
 
