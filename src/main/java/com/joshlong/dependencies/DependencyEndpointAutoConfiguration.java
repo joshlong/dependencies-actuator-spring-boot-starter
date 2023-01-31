@@ -19,7 +19,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
- * Installs the {@link DependencyEndpoint} and all supporting infrastructure
+ * Installs the {@link DependencyEndpoint} Spring Boot Actuator endpoint and all
+ * supporting infrastructure
  *
  * @author Josh Long
  */

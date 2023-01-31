@@ -9,7 +9,8 @@ import java.util.Set;
 
 /**
  * A Spring Boot Actuator endpoint exposing information about the dependencies on the
- * classpath.
+ * classpath. You can see this at
+ * <a href="https://localhost:8080/actuator/dependencies">/actuator/dependencies</a>.
  *
  * @author Josh Long
  */
