@@ -24,9 +24,6 @@ class MavenDependencyPluginDependencyReader extends AbstractBuildPluginDependenc
 
 	@Override
 	protected Set<Dependency> parseDependencies(String manifestString) {
-		// there are two parts to the Maven manifest: the classpath and the dependencies
-		// tree the classpath is a list of jar files that are on the classpath.
-		// the dependency tree is all the dependencies that are used by the application.
 		var lines = manifestString.lines().toList();
 		var cp = lines.get(0).split("::");
 		var manifestDependencies = lines//
@@ -64,23 +61,5 @@ class MavenDependencyPluginDependencyReader extends AbstractBuildPluginDependenc
 						}))
 				.collect(Collectors.toSet());
 	}
-	/*
-	 * private final Resource classpath;
-	 *
-	 * private final Set<Dependency> dependencies = new ConcurrentSkipListSet<>(
-	 * Comparator.comparing(o -> (o.artifactId() + o.groupId() + o.version())));
-	 *
-	 * MavenDependencyPluginDependencyReader(Resource resource) throws Exception {
-	 * this.classpath = resource; log.info("the classpath exists " +
-	 * this.classpath.exists()); if (!classpath.exists()) { return; } try (var in =
-	 * classpath.getInputStream()) { var bytes = in.readAllBytes();
-	 * this.dependencies.addAll(dependencies(new String(bytes))); } }
-	 */
-
-	//
-	// @Override
-	// public Set<Dependency> dependencies() {
-	// return this.dependencies;
-	// }
 
 }
