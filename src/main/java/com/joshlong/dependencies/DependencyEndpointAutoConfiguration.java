@@ -1,5 +1,10 @@
 package com.joshlong.dependencies;
 
+import com.joshlong.dependencies.ClasspathSystemPropertyDependencyReader;
+import com.joshlong.dependencies.Dependency;
+import com.joshlong.dependencies.DependencyReader;
+import com.joshlong.dependencies.MavenDependencyPluginDependencyReader;
+import com.joshlong.dependencies.actuator.DependencyEndpoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;

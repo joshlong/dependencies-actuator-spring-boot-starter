@@ -42,21 +42,24 @@ class MavenDependencyPluginDependencyReader implements DependencyReader {
 		// the dependency tree is all the dependencies that are used by the application.
 		var lines = manifestString.lines().toList();
 		var cp = lines.get(0).split("::");
-		var manifestDependencies = lines.subList(1, lines.size()).stream().map(line -> {
-			var nc = -1;
-			while (true) {
-				nc += 1;
-				if (!Character.isAlphabetic(line.charAt(nc))) {
-					continue;
-				}
-				var dep = line.substring(nc);
-				var triad = dep.split(":");
-				var groupId = triad[0];
-				var artifactId = triad[1];
-				var version = triad[3];
-				return new Dependency(groupId, artifactId, version);
-			}
-		})//
+		var manifestDependencies = lines//
+				.subList(1, lines.size())//
+				.stream()//
+				.map(line -> {
+					var nc = -1;
+					while (true) {
+						nc += 1;
+						if (!Character.isAlphabetic(line.charAt(nc))) {
+							continue;
+						}
+						var dep = line.substring(nc);
+						var triad = dep.split(":");
+						var groupId = triad[0];
+						var artifactId = triad[1];
+						var version = triad[3];
+						return new Dependency(groupId, artifactId, version);
+					}
+				})//
 				.toList();
 		return new HashSet<>(manifestDependencies)//
 				.stream()//

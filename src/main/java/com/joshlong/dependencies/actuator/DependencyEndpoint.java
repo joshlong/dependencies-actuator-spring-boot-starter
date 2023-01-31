@@ -1,5 +1,7 @@
-package com.joshlong.dependencies;
+package com.joshlong.dependencies.actuator;
 
+import com.joshlong.dependencies.Dependency;
+import com.joshlong.dependencies.DependencyReader;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 
