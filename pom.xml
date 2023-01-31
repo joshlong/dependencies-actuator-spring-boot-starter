@@ -8,11 +8,9 @@
         <version>3.0.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-
     <groupId>com.joshlong</groupId>
     <artifactId>dependencies-spring-boot-actuator-starter</artifactId>
     <version>0.0.2-SNAPSHOT</version>
-
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -22,7 +20,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
