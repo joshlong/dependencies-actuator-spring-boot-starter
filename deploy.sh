@@ -5,4 +5,23 @@
 # the build will be deployed to the staging repo
 echo "this script will prompt you for the GPG passphrase"
 export GPG_TTY=$(tty)
-mvn -DskipTests=true -P publish clean deploy
+
+## RELEASE
+echo "setting release version..."
+mvn build-helper:parse-version versions:set \
+  -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}
+RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+echo "the release version is $RELEASE_VERSION "
+echo "deploying..."
+mvn versions:commit                           # accept the release version
+mvn -DskipTests=true -P publish clean deploy  # deploy to maven central
+git commit -am "releasing ${RELEASE_VERSION}" # release the main version
+git push origin "v${RELEASE_VERSION}"         #
+
+## BACK TO THE LAB AGAIN
+mvn build-helper:parse-version versions:set \
+  -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-SNAPSHOT
+echo "the next snapshot version is $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) "
+mvn versions:commit
+git commit -am "moving to $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+git push
