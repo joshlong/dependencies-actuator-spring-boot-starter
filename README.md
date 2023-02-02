@@ -72,8 +72,8 @@ def actuatorDependencies = tasks.register("actuatorDependencies", DependencyRepo
 }
 
 tasks
-    .matching { Task t -> t.name != actuatorDependencies.name  }
-    .all { Task t -> t.dependsOn actuatorDependencies  }
+    .matching { it.name != actuatorDependencies.name  }
+    .all { it.dependsOn actuatorDependencies  }
 
 ```
 
