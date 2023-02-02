@@ -20,10 +20,9 @@ abstract class AbstractBuildPluginDependencyReportDependencyReader implements De
 			Comparator.comparing(o -> (o.artifactId() + o.groupId() + o.version())));
 
 	AbstractBuildPluginDependencyReportDependencyReader(Resource classpath) throws Exception {
-		log.info("the classpath exists " + classpath.exists());
-		if (!classpath.exists()) {
+		log.debug("the classpath Resource exists? " + classpath.exists());
+		if (!classpath.exists())
 			return;
-		}
 		try (var in = classpath.getInputStream()) {
 			var bytes = in.readAllBytes();
 			this.dependencies.addAll(parseDependencies(new String(bytes)));
