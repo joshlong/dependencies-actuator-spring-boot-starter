@@ -3,6 +3,16 @@
 # the version number in the project is a whole
 # integer, not a `-SNAPSHOT` build. otherwise
 # the build will be deployed to the staging repo
+
+function update_demos() {
+  NV=$1
+  ICI=$(pwd)
+  GRADLE_DEMO=samples/gradle-demo
+  MAVEN_DEMO=samples/maven-demo
+  cd $ICI && cd $MAVEN_DEMO && ./mvnw versions:set -DnewVersion=$NV
+  cd $ICI && cd $GRADLE_DEMO && echo "$NV" >version.txt
+}
+
 echo "this script will prompt you for the GPG passphrase"
 export GPG_TTY=$(tty)
 
