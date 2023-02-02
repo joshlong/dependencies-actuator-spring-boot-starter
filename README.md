@@ -21,7 +21,7 @@ Add the dependency to your build, like this:
 <dependency>
     <groupId>com.joshlong</groupId>
     <artifactId>dependencies-actuator-spring-boot-starter</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -54,6 +54,28 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
 ```
 
 
+## Gradle (and Groovy) 
+
+Add the dependency to your build, like this:
+
+```groovy
+implementation 'com.joshlong:dependencies-actuator-spring-boot-starter:0.0.1'
+```
+
+You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle (and Groovy) application.
+
+
+```groovy
+def actuatorDependencies = tasks.register("actuatorDependencies", DependencyReportTask) {
+    setConfiguration("runtimeClasspath")
+    outputFile = new java.io.File(project.buildDir.absoluteFile, "resources/main/gradle-classpath")
+}
+
+tasks
+    .matching { Task t -> t.name != actuatorDependencies.name  }
+    .all { Task t -> t.dependsOn actuatorDependencies  }
+
+```
 
 ## Gradle (and Kotlin)
 
@@ -63,7 +85,7 @@ Add the dependency to your build, like this:
 implementation ("com.joshlong:dependencies-actuator-spring-boot-starter:0.0.1") 
 ```
 
-You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle **Kotlin** application, as well. I am not super familiar with Gradle, and Groovy in particular, but it'll look something like this, too. 
+You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle (and Kotlin) application.
 
 ```kotlin 
 
