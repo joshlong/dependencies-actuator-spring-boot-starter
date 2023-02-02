@@ -16,7 +16,9 @@ echo "deploying..."
 mvn versions:commit                           # accept the release version
 mvn -DskipTests=true -P publish clean deploy  # deploy to maven central
 git commit -am "releasing ${RELEASE_VERSION}" # release the main version
-git push origin "v${RELEASE_VERSION}"         #
+TAG_NAME=v${RELEASE_VERSION}
+git tag -a $TAG_NAME -m "release tag ${TAG_NAME}"
+git push origin "$TAG_NAME"
 
 ## BACK TO THE LAB AGAIN
 mvn build-helper:parse-version versions:set \
