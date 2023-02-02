@@ -9,8 +9,8 @@ function update_demos() {
   ICI=$(pwd)
   GRADLE_DEMO=samples/gradle-demo
   MAVEN_DEMO=samples/maven-demo
-  cd $ICI && cd $MAVEN_DEMO && ./mvnw versions:set -DnewVersion=$NV
-  cd $ICI && cd $GRADLE_DEMO && echo "$NV" >version.txt
+  cd $ICI && cd $MAVEN_DEMO && ./mvnw versions:set -DnewVersion=$NV && $ICI
+  cd $ICI && cd $GRADLE_DEMO && echo "$NV" > version.txt && $ICI
 }
 
 echo "this script will prompt you for the GPG passphrase"
