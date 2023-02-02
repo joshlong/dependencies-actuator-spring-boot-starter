@@ -48,7 +48,7 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
         <appendOutput>true</appendOutput>
         <pathSeparator>::</pathSeparator>
         <prependGroupId>true</prependGroupId>
-        <outputFile>target/classes/classpath</outputFile>
+        <outputFile>target/classes/maven-classpath</outputFile>
     </configuration>
 </plugin>
 ```
