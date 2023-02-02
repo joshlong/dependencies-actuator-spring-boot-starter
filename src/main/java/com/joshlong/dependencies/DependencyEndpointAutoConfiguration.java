@@ -6,7 +6,6 @@ import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportRuntimeHints;
@@ -16,6 +15,7 @@ import org.springframework.core.io.Resource;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
@@ -26,15 +26,12 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 @Slf4j
 @Configuration
+@ImportRuntimeHints(DependencyEndpointAutoConfiguration.ClasspathFilesRuntimeHints.class)
 class DependencyEndpointAutoConfiguration {
 
-	public static final String MAVEN_CLASSPATH_RESOURCE_STRING = "/maven-classpath";
+	private static final Resource MAVEN_CLASSPATH_RESOURCE = new ClassPathResource("/maven-classpath");
 
-	public static final Resource MAVEN_CLASSPATH_RESOURCE = new ClassPathResource(MAVEN_CLASSPATH_RESOURCE_STRING);
-
-	public static final String GRADLE_CLASSPATH_RESOURCE_STRING = "/gradle-classpath";
-
-	public static final Resource GRADLE_CLASSPATH_RESOURCE = new ClassPathResource(GRADLE_CLASSPATH_RESOURCE_STRING);
+	private static final Resource GRADLE_CLASSPATH_RESOURCE = new ClassPathResource("/gradle-classpath");
 
 	@Bean
 	ApplicationRunner dependencyManagementContextConfigurationListener() {
@@ -46,34 +43,24 @@ class DependencyEndpointAutoConfiguration {
 		return new DependencyEndpoint(dependencyReader);
 	}
 
-	static class MavenRuntimeHints implements RuntimeHintsRegistrar {
+	static class ClasspathFilesRuntimeHints implements RuntimeHintsRegistrar {
 
 		@Override
 		public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-			hints.resources().registerResource(MAVEN_CLASSPATH_RESOURCE);
-		}
-
-	}
-
-	static class GradleRuntimeHints implements RuntimeHintsRegistrar {
-
-		@Override
-		public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-			hints.resources().registerResource(GRADLE_CLASSPATH_RESOURCE);
+			Set.of(GRADLE_CLASSPATH_RESOURCE, MAVEN_CLASSPATH_RESOURCE)//
+					.stream()//
+					.filter(Resource::exists)//
+					.forEach(r -> hints.resources().registerResource(r));
 		}
 
 	}
 
 	@Bean
-	@ConditionalOnResource(resources = GRADLE_CLASSPATH_RESOURCE_STRING)
-	@ImportRuntimeHints(GradleRuntimeHints.class)
 	GradleDependencyTaskDependencyReader gradleDependencyTaskDependencyReader() throws Exception {
 		return new GradleDependencyTaskDependencyReader(GRADLE_CLASSPATH_RESOURCE);
 	}
 
 	@Bean
-	@ConditionalOnResource(resources = MAVEN_CLASSPATH_RESOURCE_STRING)
-	@ImportRuntimeHints(MavenRuntimeHints.class)
 	MavenDependencyPluginDependencyReader mavenDependencyPluginDependencyReader() throws Exception {
 		return new MavenDependencyPluginDependencyReader(MAVEN_CLASSPATH_RESOURCE);
 	}
@@ -86,11 +73,11 @@ class DependencyEndpointAutoConfiguration {
 	@Bean
 	@Primary
 	DependencyReader compositeDependencyReader(Map<String, DependencyReader> readers) {
-		log.info("there are " + readers.size() + " " + DependencyReader.class.getName());
+		log.debug("there are " + readers.size() + " " + DependencyReader.class.getName());
 		var set = new ConcurrentSkipListSet<Dependency>(Comparator
 				.comparing(dependency -> dependency.groupId() + dependency.version() + dependency.artifactId()));
 		readers.forEach((beanName, dr) -> {
-			log.info("\tcontributing " + beanName + " with class name " + dr.getClass().getName() + '.');
+			log.debug("\tcontributing {} with class name {}.", beanName, dr.getClass().getName());
 			set.addAll(dr.dependencies());
 		});
 		return () -> set;
