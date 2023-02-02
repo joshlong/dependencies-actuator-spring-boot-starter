@@ -53,7 +53,9 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
 </plugin>
 ```
 
-## Gradle 
+
+
+## Gradle (and Kotlin)
 
 Add the dependency to your build, like this:
 
