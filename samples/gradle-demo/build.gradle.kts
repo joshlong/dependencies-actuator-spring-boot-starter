@@ -26,7 +26,7 @@ tasks
     }
 
 dependencies {
-    implementation("com.joshlong:dependencies-actuator-spring-boot-starter:0.0.1-SNAPSHOT")
+    implementation("com.joshlong:dependencies-actuator-spring-boot-starter:" + file('version.txt').text.trim())
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

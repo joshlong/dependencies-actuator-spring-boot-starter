@@ -11,6 +11,7 @@ echo "setting release version..."
 mvn build-helper:parse-version versions:set \
   -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}
 RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+
 echo "the release version is $RELEASE_VERSION "
 echo "deploying..."
 mvn versions:commit                           # accept the release version

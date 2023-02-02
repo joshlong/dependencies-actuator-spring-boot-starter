@@ -102,3 +102,6 @@ tasks
 
 ```
 
+## Samples 
+
+You can see the Actuator endpoints in action [in the samples directory](/samples/)
