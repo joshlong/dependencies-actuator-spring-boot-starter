@@ -21,7 +21,7 @@ Add the dependency to your build, like this:
 <dependency>
     <groupId>com.joshlong</groupId>
     <artifactId>dependencies-actuator-spring-boot-starter</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>__VERSION__</version>
 </dependency>
 ```
 
@@ -59,7 +59,7 @@ You can configure Apache Maven to enumerate which dependencies it thinks you hav
 Add the dependency to your build, like this:
 
 ```groovy
-implementation 'com.joshlong:dependencies-actuator-spring-boot-starter:0.0.8-SNAPSHOT'
+implementation 'com.joshlong:dependencies-actuator-spring-boot-starter:__VERSION__'
 ```
 
 You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle (and Groovy) application.
@@ -82,7 +82,7 @@ tasks
 Add the dependency to your build, like this:
 
 ```kotlin
-implementation ("com.joshlong:dependencies-actuator-spring-boot-starter:0.0.8-SNAPSHOT") 
+implementation ("com.joshlong:dependencies-actuator-spring-boot-starter:__VERSION__") 
 ```
 
 You can use the following incantation in a Gradle build to enumerate all the dependencies on the classpath in a Gradle (and Kotlin) application.
